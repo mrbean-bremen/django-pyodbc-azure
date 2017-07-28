@@ -341,11 +341,9 @@ class DatabaseOperations(BaseDatabaseOperations):
         Returns the string to use in a query when performing regular expression
         lookups (using "regex" or "iregex"). The resulting string should
         contain a '%s' placeholder for the column being searched against.
-
-        If the feature is not supported (or part of it is not supported), a
-        NotImplementedError exception can be raised.
         """
-        raise NotImplementedError('SQL Server has no built-in regular expression support.')
+        match_option = {'iregex': 0, 'regex': 1}[lookup_type]
+        return "dbo.REGEXP_LIKE(%%s, %%s, %s)=1" % (match_option,)
 
     def last_executed_query(self, cursor, sql, params):
         """
